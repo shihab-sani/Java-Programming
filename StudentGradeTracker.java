@@ -2,12 +2,10 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class StudentGradeTracker {
+    static ArrayList<String> studentsName = new ArrayList<>();
+    static ArrayList<Double> studentsGrade = new ArrayList<>();
 
-    public void GradeInut() {
-        ArrayList<String> studentsName = new ArrayList<>();
-        ArrayList<Double> studentsGrade = new ArrayList<>();
-
-        Scanner scanner = new Scanner(System.in);
+    public void GradeInput(Scanner scanner) {
         System.out.println("Enter the number of students:");
         int numberOfStudents = scanner.nextInt();
 
@@ -22,8 +20,6 @@ public class StudentGradeTracker {
         }
         
         System.out.println("Successfully Updated the Grade");
-
-        scanner.close();
 
     }
 
@@ -47,10 +43,10 @@ public class StudentGradeTracker {
         double studentGrade = grade.get(0);
         String stundentName = name.get(0);
 
-        for (int i = 0; i < grade.size(); i++) {
-            if (studentGrade < grade.get(i+1)) {
-                studentGrade = grade.get(i+1);
-                stundentName = name.get(i+1);
+        for (int i = 1; i < grade.size(); i++) {
+            if (studentGrade < grade.get(i)) {
+                studentGrade = grade.get(i);
+                stundentName = name.get(i);
             }
         }
 
@@ -66,10 +62,10 @@ public class StudentGradeTracker {
         double studentGrade = grade.get(0);
         String stundentName = name.get(0);
 
-        for (int i = 0; i < grade.size(); i++) {
-            if (studentGrade > grade.get(i+1)) {
-                studentGrade = grade.get(i+1);
-                stundentName = name.get(i+1);
+        for (int i = 1; i < grade.size(); i++) {
+            if (studentGrade > grade.get(i)) {
+                studentGrade = grade.get(i);
+                stundentName = name.get(i);
             }
         }
 
@@ -78,6 +74,8 @@ public class StudentGradeTracker {
     }
 
     public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        StudentGradeTracker gradeTracker = new StudentGradeTracker();
         while (true) { 
             System.out.println("1. Input Students Grade");
             System.out.println("2. Show All Student Result");
@@ -86,26 +84,39 @@ public class StudentGradeTracker {
             System.out.println("5. Show Average Result");
             System.out.println("6. Exit");
 
-            Scanner scanner = new Scanner(System.in);
             System.out.print("");
             System.out.println("Enter Option-> ");
+
+            if (!scanner.hasNextInt()) {
+                System.out.println("Invalid option. Please enter a number.");
+                scanner.next();
+                continue;
+            }
             int option = scanner.nextInt();
             
             if (option == 1) {
-                StudentGradeTracker gradeTracker = new StudentGradeTracker();
-                gradeTracker.GradeInut();
+                gradeTracker.GradeInput(scanner);
             } else if (option == 2) {
-
+                if (studentsName.isEmpty()) {
+                    System.out.println("No Data Found");
+                    continue;
+                }
+                System.out.println("Student Name\tGrade");
+                for (int i = 0; i < studentsName.size(); i++) {
+                    System.out.println(studentsName.get(i) + "\t" + "\t" + "\t" + studentsGrade.get(i));
+                }
             } else if (option == 3) {
-                // Show highest student result
+                gradeTracker.HighestGrade(studentsGrade, studentsName);
             } else if (option == 4) {
-                // Show lowest student result
+                gradeTracker.LowestGrade(studentsGrade, studentsName);
             } else if (option == 5) {
-                // Show average result
+                Double average = gradeTracker.AverageGrade(studentsGrade);
+                System.out.println("Average Grade->" + average);
             } else if (option == 6) {
                 System.out.println("Exiting...");
                 break;
             }
         }
+        scanner.close();
     }
 }
